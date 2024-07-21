@@ -2,3 +2,6 @@
 !/data/
 !/data/.gitkeep
 .python-version
+.ipynb_checkpoints
+__pycache__/
+*.pyc

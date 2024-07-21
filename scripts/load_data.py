@@ -1,52 +1,33 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import config
 import cv2
 import numpy as np
-import os
 from sklearn.model_selection import train_test_split
 
-root = 'data/'
+def resize_image(image, target_size):
+    """Resize an image while maintaining its aspect ratio."""
+    (h, w) = image.shape[:2]
+    (target_w, target_h) = target_size
+    aspect_ratio = w / h
+    target_aspect_ratio = target_w / target_h
+    if aspect_ratio > target_aspect_ratio:
+        new_w = target_w
+        new_h = int(target_w / aspect_ratio)
+    else:
+        new_h = target_h
+        new_w = int(target_h * aspect_ratio)
+    resized_image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    blank_image = np.zeros((target_h, target_w, 3), dtype=np.uint8)
+    x_offset = (target_w - new_w) // 2
+    y_offset = (target_h - new_h) // 2
+    blank_image[y_offset:y_offset+new_h, x_offset:x_offset+new_w] = resized_image
 
-hairline = root + 'Hairline Fracture'
-spiral = root + 'Spiral Fracture'
-greenstick = root + 'Greenstick fracture'
-comminuted = root + 'Comminuted fracture'
-dislocation = root + 'Fracture Dislocation'
-pathological = root + 'Pathological fracture'
-longitudinal = root + 'Longitudinal fracture'
-oblique = root + 'Oblique fracture'
-impacted = root + 'Impacted fracture'
-avulsion = root + 'Avulsion fracture'
+    return blank_image
 
-folders = np.array(
-    [
-        hairline,
-        spiral,
-        greenstick,
-        comminuted,
-        dislocation,
-        pathological,
-        longitudinal,
-        oblique,
-        impacted,
-        avulsion
-    ]
-)
-
-labels = np.array(
-    [
-        'hairline',
-        'spiral',
-        'greenstick',
-        'comminuted',
-        'dislocation',
-        'pathological',
-        'longitudinal',
-        'oblique',
-        'impacted',
-        'avulsion'
-    ]
-)
-
-label_ids = np.arange(len(labels))
+print("Loading images...")
 
 images_train = []
 images_test = []
@@ -55,12 +36,14 @@ labels_test = []
 label_ids_train = []
 label_ids_test = []
 
-for folder, label, label_id in zip(folders, labels, label_ids):
-    for dataset in ("Train", "Test"):
+for folder, label, label_id in zip(config.raw_data_folders, config.labels, config.label_ids):
+    for dataset in config.raw_data_subfolders.keys():
         filepath = os.path.join(folder, dataset)
         for entry in os.listdir(filepath):
-            image = cv2.imread(filepath)
-            if dataset == "Train":
+            full_path = os.path.join(filepath, entry)
+            image = cv2.imread(full_path)
+            image = resize_image(image, config.image_size)
+            if config.raw_data_subfolders[dataset] == "train":
                 images_train.append(image)
                 labels_train.append(label)
                 label_ids_train.append(label_id)
@@ -77,12 +60,29 @@ images_train, images_val, labels_train, labels_val, label_ids_train, label_ids_v
     random_state=42
 )
 
-np.save(root + "images_train.npy", np.array(images_train, dtype=np.float32))
-np.save(root + "images_val.npy", np.array(images_val, dtype=np.float32))
-np.save(root + "images_test.npy", np.array(images_test, dtype=np.float32))
-np.save(root + "labels_train.npy", np.array(labels_train, dtype=np.str_))
-np.save(root + "labels_val.npy", np.array(labels_val, dtype=np.str_))
-np.save(root + "labels_test.npy", np.array(labels_test, dtype=np.str_))
-np.save(root + "label_ids_train.npy", np.array(label_ids_train, dtype=np.int32))
-np.save(root + "label_ids_val.npy", np.array(label_ids_val, dtype=np.int32))
-np.save(root + "label_ids_test.npy", np.array(label_ids_test, dtype=np.int32))
+images_train = np.array(images_train, dtype=np.uint8)
+images_val = np.array(images_val, dtype=np.uint8)
+images_test = np.array(images_test, dtype=np.uint8)
+labels_train = np.array(labels_train, dtype=np.str_)
+labels_val = np.array(labels_val, dtype=np.str_)
+labels_test = np.array(labels_test, dtype=np.str_)
+label_ids_train = np.array(label_ids_train, dtype=np.int16)
+label_ids_val = np.array(label_ids_val, dtype=np.int16)
+label_ids_test = np.array(label_ids_test, dtype=np.int16)
+
+np.save(config.data_root + "images/images_train.npy", images_train)
+np.save(config.data_root + "images/images_val.npy", images_val)
+np.save(config.data_root + "images/images_test.npy", images_test)
+np.save(config.data_root + "images/labels_train.npy", labels_train)
+np.save(config.data_root + "images/labels_val.npy", labels_val)
+np.save(config.data_root + "images/labels_test.npy", labels_test)
+np.save(config.data_root + "images/label_ids_train.npy", label_ids_train)
+np.save(config.data_root + "images/label_ids_val.npy", label_ids_val)
+np.save(config.data_root + "images/label_ids_test.npy", label_ids_test)
+
+print("Images Loaded:")
+print(f"    {images_train.shape[0]} train images")
+print(f"    {images_val.shape[0]} train images")
+print(f"    {images_test.shape[0]} train images")
+
+print("\nData loading completed.")
