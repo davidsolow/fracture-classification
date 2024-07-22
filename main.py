@@ -20,7 +20,7 @@ def run_data_pipeline(extract_hog, extract_canny_edges, extract_contours):
 
     for script in scripts:
         script_path = f"scripts/{script}"
-        result = subprocess.run(["python", script_path], capture_output=False, text=False)
+        result = subprocess.run(["python3", script_path], capture_output=False, text=False)
         if result.returncode != 0:
             print(f"Error running {script_path}: {result.stderr}")
             break
