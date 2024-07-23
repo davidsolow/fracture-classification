@@ -56,7 +56,7 @@ images_train, images_val, labels_train, labels_val, label_ids_train, label_ids_v
     images_train,
     labels_train,
     label_ids_train,
-    test_size=0.2,
+    test_size=config.val_split,
     random_state=42
 )
 

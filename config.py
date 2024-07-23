@@ -56,6 +56,8 @@ images_prefix = 'images_'
 
 image_size = (512, 512)
 
+val_split = 0.1
+
 # Preprocessing
 grayscale_flg = 1
 histogram_eq_flg = 1
