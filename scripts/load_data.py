@@ -52,37 +52,22 @@ for folder, label, label_id in zip(config.raw_data_folders, config.labels, confi
                 labels_test.append(label)
                 label_ids_test.append(label_id)
 
-images_train, images_val, labels_train, labels_val, label_ids_train, label_ids_val = train_test_split(
-    images_train,
-    labels_train,
-    label_ids_train,
-    test_size=config.val_split,
-    random_state=42
-)
-
 images_train = np.array(images_train, dtype=np.uint8)
-images_val = np.array(images_val, dtype=np.uint8)
 images_test = np.array(images_test, dtype=np.uint8)
 labels_train = np.array(labels_train, dtype=np.str_)
-labels_val = np.array(labels_val, dtype=np.str_)
 labels_test = np.array(labels_test, dtype=np.str_)
 label_ids_train = np.array(label_ids_train, dtype=np.int16)
-label_ids_val = np.array(label_ids_val, dtype=np.int16)
 label_ids_test = np.array(label_ids_test, dtype=np.int16)
 
 np.save(config.data_root + "images/images_train.npy", images_train)
-np.save(config.data_root + "images/images_val.npy", images_val)
 np.save(config.data_root + "images/images_test.npy", images_test)
 np.save(config.data_root + "images/labels_train.npy", labels_train)
-np.save(config.data_root + "images/labels_val.npy", labels_val)
 np.save(config.data_root + "images/labels_test.npy", labels_test)
 np.save(config.data_root + "images/label_ids_train.npy", label_ids_train)
-np.save(config.data_root + "images/label_ids_val.npy", label_ids_val)
 np.save(config.data_root + "images/label_ids_test.npy", label_ids_test)
 
 print("Images Loaded:")
 print(f"    {images_train.shape[0]} train images")
-print(f"    {images_val.shape[0]} train images")
-print(f"    {images_test.shape[0]} train images")
+print(f"    {images_test.shape[0]} test images")
 
 print("\nData loading completed.")
