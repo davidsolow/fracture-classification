@@ -1,6 +1,6 @@
-/data/*
-!/data/
-!/data/.gitkeep
+data/*
+!data/
+!data/.gitkeep
 .python-version
 .ipynb_checkpoints
 __pycache__/
