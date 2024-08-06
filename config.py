@@ -94,3 +94,9 @@ vgg19_name = "VGG19"
 vgg19_folder = "data/vgg19/"
 vgg19_prefix = "vgg19_"
 vgg19_weights = 'imagenet'
+
+# PCA
+pca_name = "PCA"
+pca_folder = "data/pca/"
+pca_prefix = "pca_"
+n_components = 50

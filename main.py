@@ -10,7 +10,8 @@ def cli():
 @click.option('--extract-canny-edges', type=bool, default=True, help="Generate Canny Edges features")
 @click.option('--extract-contours', type=bool, default=True, help="Generate Contours features")
 @click.option('--extract-vgg19', type=bool, default=True, help="Generate VGG19 features")
-def run_data_pipeline(extract_hog, extract_canny_edges, extract_contours, extract_vgg19):
+@click.option('--extract-pca', type=bool, default=True, help="Generate PCA features")
+def run_data_pipeline(extract_hog, extract_canny_edges, extract_contours, extract_vgg19, extract_pca):
     scripts = ["load_data.py", "preprocessing.py"]
     if extract_hog:
         scripts.append("extract_hog.py")
@@ -20,6 +21,8 @@ def run_data_pipeline(extract_hog, extract_canny_edges, extract_contours, extrac
         scripts.append("extract_contours.py")
     if extract_vgg19:
         scripts.append("extract_vgg19.py")
+    if extract_pca:
+        scripts.append("extract_pca.py")
 
     for script in scripts:
         script_path = f"scripts/{script}"
