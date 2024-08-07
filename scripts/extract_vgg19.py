@@ -4,7 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import config
 import numpy as np
-from keras.applications import VGG19
+from keras.applications import VGG19, vgg19
 
 print(f"Extracting {config.vgg19_name} Features...")
 
@@ -22,7 +22,8 @@ for file in os.listdir(config.images_folder):
             reshaped = np.expand_dims(image, axis=-1)
             reshaped = np.repeat(reshaped, 3, axis=-1)
             reshaped = np.expand_dims(reshaped, axis=0)
-            feature_image = model.predict(reshaped)
+            reshaped = vgg19.preprocess_input(image)
+            feature_image = model.predict(reshaped.reshape((1, 512, 512, 3)))
             extracted_features.append(feature_image)
 
         if extracted_features:
