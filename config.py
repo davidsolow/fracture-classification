@@ -88,3 +88,15 @@ contours_folder = "data/contours/"
 contours_prefix = "contours_"
 contours_threshold1 = 127
 contours_threshold2 = 255
+
+# vgg19
+vgg19_name = "VGG19"
+vgg19_folder = "data/vgg19/"
+vgg19_prefix = "vgg19_"
+vgg19_weights = 'imagenet'
+
+# PCA
+pca_name = "PCA"
+pca_folder = "data/pca/"
+pca_prefix = "pca_"
+n_components = 50
